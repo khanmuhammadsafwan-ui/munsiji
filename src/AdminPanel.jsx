@@ -5,7 +5,7 @@ import { collection, getDocs, query, where, orderBy, Timestamp } from 'firebase/
 
 // ========== CONFIG ==========
 // 🔧 তোমার admin email এখানে সেট করো
-const ADMIN_EMAILS = ['CHANGE_THIS@gmail.com'];
+const ADMIN_EMAILS = ['kmsafwanboss@gmail.com'];
 
 // ========== COLORS & STYLES ==========
 const C = {
