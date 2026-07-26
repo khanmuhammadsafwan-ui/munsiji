@@ -8,7 +8,7 @@ import { getAuth } from 'firebase/auth'
 import { getFirestore } from 'firebase/firestore'
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyC3kglnrThGLz9T_Xp44fwQQSkRrRVtZRg,
+  apiKey: 'AIzaSyC3kglnrThGLz9T_Xp44fwQQSkRrRVtZRg',
   authDomain: 'munsiji-app.firebaseapp.com',
   projectId: 'munsiji-b2a55',
   storageBucket: 'munsiji-app.firebasestorage.app',
