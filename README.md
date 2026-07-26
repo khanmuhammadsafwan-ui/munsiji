@@ -1,124 +1,21 @@
-# মুন্সীজি (Munsiji) — আপনার ডিজিটাল দোকানদার
+# মুন্সীজি v2 — ফার্মেসী এডিশন (ধাপ ১ + ২ + ৩)
 
-## 🚀 Setup Guide
+এই প্যাকেজে আছে: Google Sign-in লগইন (ফ্রি Spark প্ল্যানেই চলে — Phone OTP-তে Blaze প্ল্যান লাগতো বলে বাদ), ফার্মেসী সেটআপ ফ্লো, টিল-মেডিক্যাল ডিজাইন সিস্টেম, অ্যাপ শেল, পুরো স্টক মডিউল (প্রি-লোডেড বাংলাদেশি ওষুধের সিড ডেটাবেস, বক্স→পাতা→পিস ইউনিট, ব্যাচ-ভিত্তিক মেয়াদ ট্র্যাকিং, লো-স্টক অ্যালার্ট), আর পুরো বিক্রি মডিউল — সার্চ করে বিক্রি, বাংলা ভয়েস সেল ("নাপা দুই পাতা" বললে অ্যাপ নিজে ওষুধ ও পরিমাণ বুঝে নেয়), কার্ট, ছাড়, FEFO নিয়মে স্টক থেকে অটো কাটা (যে ব্যাচের মেয়াদ আগে শেষ হবে সেটা আগে বিক্রি, মেয়াদোত্তীর্ণ ব্যাচ কখনো বিক্রি হয় না), আজকের বিক্রির তালিকা, আর লাইভ ড্যাশবোর্ড। বাকির খাতা পরের ধাপে।
 
-### Step 1: Firebase Project তৈরি করুন
-1. https://console.firebase.google.com এ যান
-2. "Add Project" → নাম দিন: **munsiji-app**
-3. Google Analytics enable করুন (optional)
+ভয়েস সেল Web Speech API দিয়ে বানানো — ফ্রি, কোনো API key লাগে না, তবে Chrome ব্রাউজারে (মোবাইল বা ডেস্কটপ) সবচেয়ে ভালো কাজ করে আর ইন্টারনেট লাগে। প্রথমবার মাইক্রোফোনের অনুমতি চাইবে।
 
-### Step 2: Firebase Authentication Setup
-1. Firebase Console → **Authentication** → **Sign-in method**
-2. **Phone** enable করুন
-3. Test phone number যোগ করুন (development এর জন্য):
-   - Phone: `+8801700000000` → OTP: `123456`
+সিড ডেটাবেসটা আমার সাধারণ জ্ঞান থেকে বানানো একটা শুরুর তালিকা — বেশিরভাগ এন্ট্রি ঠিক থাকার কথা, তবে দু-একটা কোম্পানি বা স্ট্রেংথ এদিক-ওদিক হতে পারে; ভুল চোখে পড়লে src/data/medicines.js ফাইলে সরাসরি ঠিক করা যায়, আর দোকানদার অ্যাপ থেকেই কাস্টম ওষুধ যোগ করতে পারে।
 
-### Step 3: Firestore Database Setup
-1. Firebase Console → **Firestore Database** → **Create database**
-2. **Start in test mode** সিলেক্ট করুন
-3. Location: `asia-southeast1` (Singapore, BD এর কাছে)
+Firestore চালু করার পর Firebase Console → Firestore Database → Rules-এ গিয়ে এই প্রজেক্টের firestore.rules ফাইলের কোডটা বসিয়ে Publish করো — এতে প্রতিটা দোকানের ডেটা শুধু তার মালিকই দেখতে পারবে।
 
-### Step 4: Firebase Web App Register
-1. Firebase Console → Project Settings → **Add app** → Web (</> icon)
-2. App nickname: **munsiji-web**
-3. Firebase config কপি করুন
-4. `src/firebase.js` ফাইলে paste করুন:
+## চালু করার নিয়ম
 
-```javascript
-const firebaseConfig = {
-  apiKey: "YOUR_ACTUAL_API_KEY",
-  authDomain: "munsiji-app.firebaseapp.com",
-  projectId: "munsiji-app",
-  storageBucket: "munsiji-app.firebasestorage.app",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
-};
-```
+প্রথমে `src/firebase.js` ফাইলটা খুলে Firebase Console (munsiji-app প্রজেক্ট) → Project Settings → General → Your apps → Web app থেকে firebaseConfig-এর মানগুলো বসাও। এরপর Firebase Console → Authentication → Sign-in method-এ গিয়ে Google প্রোভাইডার Enable করা আছে কিনা নিশ্চিত করো (না থাকলে Add new provider → Google → Enable → support email বেছে Save), আর Firestore Database তৈরি না করা থাকলে Build → Firestore Database → Create database (production mode, location: asia-south1) করে নাও।
 
-### Step 5: Local Development
-```bash
-npm install
-npx vite
-```
-Browser এ http://localhost:5173 ওপেন করুন।
+লোকালে চালাতে টার্মিনালে `npm install` তারপর `npm run dev` লেখো — ব্রাউজারে http://localhost:5173 খুলবে।
 
-### Step 6: Vercel এ Deploy
-```bash
-npm install -g vercel
-vercel
-```
+Vercel-এ ডিপ্লয় করতে প্রজেক্টটা GitHub-এ পুশ করে Vercel-এ ইমপোর্ট করো (Framework: Vite, বাকি সব ডিফল্ট)। ডিপ্লয়ের পর Vercel-এর ডোমেইনটা (যেমন munsiji.vercel.app) Firebase Console → Authentication → Settings → Authorized domains-এ যোগ করতে ভুলো না — নাহলে Google লগইন কাজ করবে না।
 
-### Step 7: Firebase Auth Domain Whitelist
-1. Firebase Console → Authentication → Settings
-2. **Authorized domains** এ আপনার Vercel URL যোগ করুন:
-   - `munsiji.vercel.app`
-   - `localhost`
+## ফাইল কাঠামো
 
----
-
-## 📱 Features (MVP)
-
-| Feature | Description |
-|---------|-------------|
-| 📱 Phone OTP Login | বাংলাদেশী নম্বর দিয়ে লগইন |
-| 🏪 Shop Setup | দোকানের তথ্য সেটআপ |
-| 📦 Inventory Management | পণ্য যোগ/সম্পাদনা/মুছুন, স্টক ট্র্যাকিং |
-| 🛒 Quick Sell | ট্যাপ করে দ্রুত বিক্রি |
-| 🎤 Voice Input | বাংলায় বলে বিক্রির তালিকা তৈরি |
-| 📝 বাকির খাতা | কার কত বাকি, টাকা আদায় |
-| 📊 Dashboard | আজকের বিক্রি, মোট বাকি, স্টক মূল্য |
-| ⚠️ Low Stock Alert | কম স্টকের সতর্কতা |
-| 🌐 Works Offline | কোর ফিচার অফলাইনে কাজ করে |
-| 🇧🇩 100% Bengali UI | সম্পূর্ণ বাংলা ইন্টারফেস |
-
----
-
-## 🏗️ Tech Stack
-- **Frontend**: React + Vite
-- **Backend**: Firebase (Auth + Firestore)
-- **Voice**: Web Speech API (Bengali)
-- **Hosting**: Vercel
-- **PWA**: Installable on mobile
-
----
-
-## 📁 File Structure
-```
-munsiji-app/
-├── index.html          # Entry HTML
-├── vite.config.js      # Vite config
-├── package.json
-├── public/
-│   └── manifest.json   # PWA manifest
-└── src/
-    ├── main.jsx        # React entry
-    ├── App.jsx         # Main app (all screens)
-    ├── firebase.js     # Firebase config
-    └── db.js           # Database operations
-```
-
----
-
-## 🔒 Firestore Security Rules (Production)
-```
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /shops/{uid} {
-      allow read, write: if request.auth.uid == uid;
-    }
-    match /products/{docId} {
-      allow read, write: if request.auth.uid == resource.data.uid || request.auth != null;
-    }
-    match /sales/{docId} {
-      allow read, write: if request.auth.uid == resource.data.uid || request.auth != null;
-    }
-    match /baki/{docId} {
-      allow read, write: if request.auth.uid == resource.data.uid || request.auth != null;
-    }
-    match /customers/{docId} {
-      allow read, write: if request.auth.uid == resource.data.uid || request.auth != null;
-    }
-  }
-}
-```
+src/firebase.js-এ Firebase কানেকশন, src/App.jsx-এ লগইন→সেটআপ→অ্যাপ রাউটিং লজিক, src/pages/-এ Login, ShopSetup, Dashboard আর Placeholder স্ক্রিন, src/components/AppShell.jsx-এ হেডার ও বটম নেভিগেশন, আর src/index.css-এ পুরো ডিজাইন সিস্টেম (রঙ, ফন্ট, কম্পোনেন্ট) আছে।
