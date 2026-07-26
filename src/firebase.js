@@ -10,9 +10,9 @@ import { getFirestore } from 'firebase/firestore'
 const firebaseConfig = {
   apiKey: 'AIzaSyC3kglnrThGLz9T_Xp44fwQQSkRrRVtZRg,
   authDomain: 'munsiji-app.firebaseapp.com',
-  projectId: 'munsiji-app',
+  projectId: 'munsiji-b2a55',
   storageBucket: 'munsiji-app.firebasestorage.app',
-  messagingSenderId: 'তোমার-SENDER-ID',
+  messagingSenderId: '1037754771828',
   appId: '1:1037754771828:web:6ce19e84bf9a93687d6421',
 }
 
