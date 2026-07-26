@@ -8,12 +8,12 @@ import { getAuth } from 'firebase/auth'
 import { getFirestore } from 'firebase/firestore'
 
 const firebaseConfig = {
-  apiKey: 'তোমার-API-KEY-এখানে',
+  apiKey: 'AIzaSyC3kglnrThGLz9T_Xp44fwQQSkRrRVtZRg,
   authDomain: 'munsiji-app.firebaseapp.com',
   projectId: 'munsiji-app',
   storageBucket: 'munsiji-app.firebasestorage.app',
   messagingSenderId: 'তোমার-SENDER-ID',
-  appId: 'তোমার-APP-ID',
+  appId: '1:1037754771828:web:6ce19e84bf9a93687d6421',
 }
 
 const app = initializeApp(firebaseConfig)
