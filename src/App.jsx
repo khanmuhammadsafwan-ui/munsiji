@@ -16,20 +16,43 @@ export default function App() {
   const [user, setUser] = useState(null)
   const [shop, setShop] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [fatal, setFatal] = useState('')
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (u) => {
       setUser(u)
-      if (u) {
-        const snap = await getDoc(doc(db, 'shops', u.uid))
-        setShop(snap.exists() ? snap.data() : null)
-      } else {
-        setShop(null)
+      try {
+        if (u) {
+          const snap = await getDoc(doc(db, 'shops', u.uid))
+          setShop(snap.exists() ? snap.data() : null)
+        } else {
+          setShop(null)
+        }
+        setFatal('')
+      } catch (e) {
+        console.error(e)
+        if (e.code === 'permission-denied') {
+          setFatal('ডেটাবেসে ঢোকার অনুমতি নেই। Firebase Console → Firestore Database → Rules-এ গিয়ে প্রজেক্টের firestore.rules ফাইলের কোডটা বসিয়ে Publish করো।')
+        } else if (e.code === 'unavailable' || e.code === 'failed-precondition' || e.code === 'not-found') {
+          setFatal('ডেটাবেস পাওয়া যাচ্ছে না। Firebase Console → Firestore Database → Create database (location: asia-south1) করা হয়েছে কিনা দেখো, আর ইন্টারনেট সংযোগ চেক করো।')
+        } else {
+          setFatal('ডেটাবেস সংযোগে সমস্যা: ' + (e.code || e.message))
+        }
       }
       setLoading(false)
     })
     return unsub
   }, [])
+
+  if (fatal) {
+    return (
+      <div className="loading-screen" style={{ padding: 24 }}>
+        <div style={{ fontSize: 40 }}>⚠️</div>
+        <div className="error-box" style={{ maxWidth: 440, textAlign: 'center' }}>{fatal}</div>
+        <button className="btn btn-primary" onClick={() => location.reload()}>আবার চেষ্টা করো</button>
+      </div>
+    )
+  }
 
   if (loading) {
     return (
