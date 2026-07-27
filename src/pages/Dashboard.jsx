@@ -47,7 +47,7 @@ export default function Dashboard({ shop }) {
   return (
     <div>
       <h2 style={{ fontSize: 20, color: 'var(--teal-900)', marginBottom: 14 }}>
-        আসসালামু আলাইকুম, {shop.owner.split(' ')[0]} 👋
+        আসসালামু আলাইকুম, {(shop.owner || '').split(' ')[0] || 'দোকানদার'} 👋
       </h2>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
