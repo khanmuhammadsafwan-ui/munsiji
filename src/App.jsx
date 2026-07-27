@@ -24,7 +24,10 @@ export default function App() {
       try {
         if (u) {
           const snap = await getDoc(doc(db, 'shops', u.uid))
-          setShop(snap.exists() ? snap.data() : null)
+          // পুরনো (মুদি-ভার্সনের) রেকর্ড হলে ফার্মেসী সেটআপে পাঠাও —
+          // সেটআপ সেভ করলে নতুন ফরম্যাটে বদলে যাবে
+          const data = snap.exists() ? snap.data() : null
+          setShop(data && data.type === 'pharmacy' && data.owner ? data : null)
         } else {
           setShop(null)
         }
